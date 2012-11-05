@@ -6,11 +6,11 @@ require 'properties/version'
 Gem::Specification.new do |gem|
   gem.name          = "properties"
   gem.version       = Properties::VERSION
-  gem.authors       = ["TODO: Write your name"]
-  gem.email         = ["TODO: Write your email address"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
-  gem.homepage      = ""
+  gem.authors       = "Edison"
+  gem.email         = "hydra1983@gmail.com"
+  gem.description   = "Load java style properties text"
+  gem.summary       = "Load java style properties text"
+  gem.homepage      = "http://github.com/hydra1983/properties"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
