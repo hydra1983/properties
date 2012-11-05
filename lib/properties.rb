@@ -18,7 +18,7 @@ module Properties
     def load(file)
       if File.exists?(file) and File.file?(file)
         ___parse___(IO.read(file)).each do |prop|
-          @@properties[prop.name] = prop.value
+          @@properties[prop.name.to_sym] = prop.value
         end
       end
     end
