@@ -1,3 +1,5 @@
+require 'stringio'
+
 require "properties/version"
 require "properties/evaluator"
 require "properties/evaluator/rubyevaluator"
@@ -70,8 +72,10 @@ module Properties
           next
         end
 
-        name = s[0..(split_index - 1)].strip
-        value = s[(split_index + 1)..-1].strip
+        name = s[0..(split_index - 1)]
+        name = name.strip unless name.nil?
+        value = s[(split_index + 1)..-1]
+        value = value.strip unless value.nil?
         props[i] = Property.new(name, value)
       end
 
