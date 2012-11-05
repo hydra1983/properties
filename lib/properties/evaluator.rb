@@ -6,20 +6,26 @@ module Properties
   end
 
   class Evaluator
+    class << self
+      def default_value(name)
+        "${#{name}}"  
+      end
+    end
     def initialize(context)
       @context = context
     end
 
-    def evaluate(value)
-      data = /\$\{([^\}]+)\}/.match(value)
-      return value if data.nil?
+    def evaluate(src_value)
+      data = /\$\{([^\}]+)\}/.match(src_value)
+      return src_value if data.nil?
 
-      value.gsub(/\$\{([^\}]+)\}/) do
+      src_value.gsub(/\$\{([^\}]+)\}/) do
         name = $1
         if @context.has_key?(name.to_sym)
-          evaluate(@context[name.to_sym])
+          value = evaluate(@context[name.to_sym])
+          value.nil? ? Evaluator.default_value(name) : value
         else
-          "${#{name}}"
+          Evaluator.default_value(name)
         end
       end
     end

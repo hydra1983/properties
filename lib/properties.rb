@@ -24,9 +24,11 @@ module Properties
     end
 
     def dump
-      @@properties.each do |key,value|
-        puts "#{key}=#{___evaluate___(value)}\n"
+      msg = ""
+      @@properties.each do |name,value|
+        msg += "#{name}=#{___evaluate___(value)}\n"
       end
+      msg
     end
 
   private
@@ -34,7 +36,7 @@ module Properties
       if name.to_s =~ /=$/
         @@properties[$`.to_sym] = args.first
       elsif @@properties.has_key?(name.to_sym)
-        ___evaluate___(@@properties[name.to_sym])
+        ___evaluate___(@@properties[name.to_sym])     
       else
         raise %Q{No property "#{name}" defined}
       end

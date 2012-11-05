@@ -13,11 +13,11 @@ module Properties
       @built_in = BuiltInMethods.new
     end
 
-    def evaluate(value)
-      value = super
-      data = /\#\{([^\}]+)\}/.match(value)
-      return value if data.nil?
-      value.gsub(/\#\{([^\}]+)\}/){@built_in.instance_eval($1)}
+    def evaluate(src_value)
+      src_value = super
+      data = /\#\{([^\}]+)\}/.match(src_value)
+      return src_value if data.nil?
+      src_value.gsub(/\#\{([^\}]+)\}/){@built_in.instance_eval($1)}
     end
 
     class BuiltInMethods
