@@ -34,7 +34,7 @@ module Properties
       elsif @@properties.key?(name)
         ___evaluate___(@@properties[name])
       else
-        super
+        raise %Q{No property "#{name}" defined}
       end
     end
 
