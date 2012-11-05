@@ -19,6 +19,7 @@ module Properties
       if File.exists?(file) and File.file?(file)
         ___parse___(IO.read(file)).each do |prop|
           @@properties[prop.name.to_sym] = prop.value
+          puts "[property] #{prop.name}=#{prop.value}\n"
         end
       end
     end
@@ -51,14 +52,14 @@ module Properties
       i = -1
       while (i = i + 1) < lines.size
         s = lines[i].strip
-        if !s.empty? and s[0] != "#" and s[0] != "!"
+        if !s.empty? and !s.start_with?('#') and !s.start_with?('!')
           if multiline
             props[props.size - 1] = props[props.size - 1][0..-2] + s
           else
             props.push(s)
           end
 
-          multiline = s[s.size - 1] == "\\"
+          multiline = s.end_with?('\\')
         end
       end
 
