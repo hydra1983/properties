@@ -19,7 +19,6 @@ module Properties
       if File.exists?(file) and File.file?(file)
         ___parse___(IO.read(file)).each do |prop|
           @@properties[prop.name.to_sym] = prop.value
-          puts "[property] #{prop.name}=#{prop.value}\n"
         end
       end
     end
