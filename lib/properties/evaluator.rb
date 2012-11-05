@@ -16,8 +16,8 @@ module Properties
 
       value.gsub(/\$\{([^\}]+)\}/) do
         name = $1
-        if @context.has_key?(name)
-          evaluate(@context[name])
+        if @context.has_key?(name.to_sym)
+          evaluate(@context[name.to_sym])
         else
           "${#{name}}"
         end

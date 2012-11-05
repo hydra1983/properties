@@ -33,8 +33,8 @@ module Properties
     def method_missing(name, *args, &blk)
       if name.to_s =~ /=$/
         @@properties[$`.to_sym] = args.first
-      elsif @@properties.key?(name)
-        ___evaluate___(@@properties[name])
+      elsif @@properties.has_key?(name.to_sym)
+        ___evaluate___(@@properties[name.to_sym])
       else
         raise %Q{No property "#{name}" defined}
       end
