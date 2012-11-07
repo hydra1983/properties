@@ -15,11 +15,11 @@ module Properties
       super || @@properties.key?(name.to_sym)
     end
 
-    def load(file)
-      if File.exists?(file) and File.file?(file)
-        ___parse___(IO.read(file)).each do |prop|
-          @@properties[prop.name.to_sym] = prop.value
-        end
+    def load(path)
+      raise "Path #{path} does not exist" unless File.exists?(path)
+      raise "#Path #{path} is a not a file" unless File.file?(path)
+        ___parse___(IO.read(path)).each do |prop|
+        @@properties[prop.name.to_sym] = prop.value
       end
     end
 
@@ -31,7 +31,8 @@ module Properties
       msg
     end
 
-  private
+    private
+
     def method_missing(name, *args, &blk)
       if name.to_s =~ /=$/
         @@properties[$`.to_sym] = args.first
