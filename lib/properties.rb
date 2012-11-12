@@ -11,6 +11,14 @@ module Properties
       @evaluator_factory = evaluator_factory.nil? ? EvaluatorFactory.new : evaluator_factory
     end
 
+    def [](name)
+      ___evaluate___(@@properties[name.to_sym]) 
+    end
+
+    def []=(name,value)
+      @@properties[name.to_sym] = value
+    end
+
     def respond_to?(name)
       super || @@properties.key?(name.to_sym)
     end
@@ -18,8 +26,9 @@ module Properties
     def load(path)
       raise "Path #{path} does not exist" unless File.exists?(path)
       raise "#Path #{path} is a not a file" unless File.file?(path)
-        ___parse___(IO.read(path)).each do |prop|
-        @@properties[prop.name.to_sym] = prop.value
+
+      ___parse___(IO.read(path)).each do |prop|
+        self[prop.name] = prop.value
       end
     end
 
@@ -32,12 +41,11 @@ module Properties
     end
 
     private
-
     def method_missing(name, *args, &blk)
       if name.to_s =~ /=$/
-        @@properties[$`.to_sym] = args.first
+        self[$`] = args.first
       elsif @@properties.has_key?(name.to_sym)
-        ___evaluate___(@@properties[name.to_sym])     
+        self[name]
       else
         raise %Q{No property "#{name}" defined}
       end
