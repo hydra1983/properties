@@ -19,10 +19,6 @@ module Properties
       @@properties[name.to_sym] = value
     end
 
-    def respond_to?(name)
-      super || @@properties.key?(name.to_sym)
-    end
-
     def load(path)
       raise "Path #{path} does not exist" unless File.exists?(path)
       raise "#Path #{path} is a not a file" unless File.file?(path)
@@ -38,6 +34,23 @@ module Properties
         msg += "#{name}=#{___evaluate___(value)}\n"
       end
       msg
+    end
+
+    def has_key?(name) 
+      @@properties.key?(name.to_sym)
+    end
+
+    def has_value?(name)
+      result = has_key?(name)
+      if result
+        value = self[name]
+        result ||= !(value.nil? || value.empty? || value == "$#{name.to_s}")
+      end
+      result
+    end
+
+    def respond_to?(name)
+      super || has_key?(name)
     end
 
     private
