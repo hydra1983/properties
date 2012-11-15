@@ -44,7 +44,7 @@ module Properties
       result = has_key?(name)
       if result
         value = self[name]
-        result ||= !(value.nil? || value.empty? || value == "$#{name.to_s}")
+        result ||= !(value.nil? || value == "$#{name.to_s}")
       end
       result
     end
@@ -115,8 +115,7 @@ module Properties
         index1 = value.index(s[n])
         index2 = index1 if !index1.nil? and index1 < index2
       end
-
-      (index2 == value.size - 1) ? -1 : index2
+      index2
     end
 
     def ___evaluate___(value)
