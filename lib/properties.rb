@@ -1,27 +1,30 @@
 require 'stringio'
 
 require "properties/version"
+require "properties/holder"
 require "properties/evaluator"
 require "properties/evaluator/rubyevaluator"
 
 module Properties
   class Properties
-    def initialize(evaluator_factory = nil)
-      @@properties ||= {}
-      @evaluator_factory = evaluator_factory.nil? ? EvaluatorFactory.new : evaluator_factory
+    def initialize(opts = {})
+      @properties ||= opts.fetch(:properties_holder, PropertiesHolder.new)
+      @evaluator_factory = opts.fetch(:evaluator_factory, EvaluatorFactory.new)
     end
 
     def [](name)
-      ___evaluate___(@@properties[name.to_sym]) 
+      ___evaluate___(@properties[name.to_sym]) 
     end
 
     def []=(name,value)
-      @@properties[name.to_sym] = value
+      @properties[name.to_sym] = value
     end
 
-    def load(path)
-      raise "Path #{path} does not exist" unless File.exists?(path)
-      raise "#Path #{path} is a not a file" unless File.file?(path)
+    def load(path,opts= {:force => true})
+      if opts[:force]
+        raise "Path #{path} does not exist" unless File.exists?(path)
+        raise "#Path #{path} is a not a file" unless File.file?(path)
+      end
 
       ___parse___(IO.read(path)).each do |prop|
         self[prop.name] = prop.value
@@ -30,14 +33,14 @@ module Properties
 
     def dump
       msg = ""
-      @@properties.each do |name,value|
+      @properties.each do |name,value|
         msg += "#{name}=#{___evaluate___(value)}\n"
       end
       msg
     end
 
     def has_key?(name) 
-      @@properties.key?(name.to_sym)
+      @properties.key?(name.to_sym)
     end
 
     def has_value?(name)
@@ -57,7 +60,7 @@ module Properties
     def method_missing(name, *args, &blk)
       if name.to_s =~ /=$/
         self[$`] = args.first
-      elsif @@properties.has_key?(name.to_sym)
+      elsif @properties.has_key?(name.to_sym)
         self[name]
       else
         raise %Q{No property "#{name}" defined}
@@ -119,7 +122,7 @@ module Properties
     end
 
     def ___evaluate___(value)
-      @evaluator ||= @evaluator_factory.create(@@properties)
+      @evaluator ||= @evaluator_factory.create(@properties)
       @evaluator.evaluate(value)
     end
 
