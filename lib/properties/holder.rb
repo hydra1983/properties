@@ -16,6 +16,11 @@ module Properties
       @@properties.has_key?(_to_sym(key))
     end
 
+    def each
+      @@properties.each {|property| yield property}
+      self
+    end
+
     protected
     def _to_sym(key)
       key = key.to_sym unless key.is_a?(Symbol)

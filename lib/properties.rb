@@ -55,6 +55,10 @@ module Properties
       super || has_key?(name)
     end
 
+    def evaluate(value)
+      ___evaluate___(value)
+    end
+
     private
     def method_missing(name, *args, &blk)
       if name.to_s =~ /=$/
