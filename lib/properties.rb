@@ -21,11 +21,10 @@ module Properties
     end
 
     def load(path,opts= {:force => true})
-      if opts[:force]
-        raise "Path #{path} does not exist" unless File.exists?(path)
-        raise "#Path #{path} is a not a file" unless File.file?(path)
-      end
-
+      raise "Path #{path} does not exist" unless File.exists?(path) && opts[:force]
+      return unless File.exists?(path)
+      raise "#Path #{path} is a not a file" unless File.file?(path)
+      
       ___parse___(IO.read(path)).each do |prop|
         self[prop.name] = prop.value
       end
