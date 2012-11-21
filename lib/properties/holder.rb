@@ -16,6 +16,7 @@ module Properties
       @@properties.has_key?(_to_sym(key))
     end
 
+    protected
     def _to_sym(key)
       key = key.to_sym unless key.is_a?(Symbol)
       key
